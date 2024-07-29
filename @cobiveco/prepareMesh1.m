@@ -54,7 +54,12 @@ C1 = double(o.m1.vol.cells);
 o.m1.L = cotmatrix(P1, C1);
 %Gradient
 o.m1.G = grad(P1, C1);
-o.m1.massMat = massmatrix(P1, C1, 'voronoi');
+try
+    o.m1.massMat = massmatrix(P1, C1, 'voronoi');
+catch
+    warning('Veroni mass matrix failed, using barycentric instead')
+    o.m1.massMat = massmatrix(P1, C1, 'barycentric');
+end
 o.m1.M = baryInterpMat(P1, C1, o.m0.vol.points);
 
 if o.cfg.exportLevel > 1
